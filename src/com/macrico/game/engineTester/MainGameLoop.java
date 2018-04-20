@@ -83,11 +83,23 @@ public class MainGameLoop {
         terrains = new ArrayList<Terrain>();
         terrains.add(new Terrain(-1, -1, loader, texturePack, blendMap));
 
+        entities = new ArrayList<Entity>();
+        normalEntities = new ArrayList<Entity>();
+        lamps = new ArrayList<Lamp>();
+        lights = new ArrayList<Light>();
+        guiTextures = new ArrayList<GuiTexture>();
+        waters = new ArrayList<WaterTile>();
+
         float x = random.nextFloat() * -800;
         float z = random.nextFloat() * -800;
         float y = terrains.get(0).getHeightOfTerrain(x, z);
-        if (y > -4.0) player = new Player(playerTexture, new Vector3f(x, y, z), 0, random.nextFloat() * 360, 0, 0.2f);
-        else player = new Player(playerTexture, new Vector3f(-200, 0, -200), 0, random.nextFloat() * 360, 0, 0.2f);
+        if (y > -4.0) {
+            player = new Player(playerTexture, new Vector3f(x, y, z), 0, random.nextFloat() * 360, 0, 0.2f);
+            entities.add(player);
+        } else {
+            player = new Player(playerTexture, new Vector3f(-200, 0, -200), 0, random.nextFloat() * 360, 0, 0.2f);
+            entities.add(player);
+        }
         camera = new Camera(player, terrains.get(0));
 
         renderer = new MasterRenderer(loader, camera);
@@ -95,13 +107,6 @@ public class MainGameLoop {
         picker = new MousePicker(camera, renderer.getProjectionMatrix(), terrains.get(0));
         ParticleMaster.init(loader, renderer.getProjectionMatrix());
         TextMaster.init(loader);
-
-        entities = new ArrayList<Entity>();
-        normalEntities = new ArrayList<Entity>();
-        lamps = new ArrayList<Lamp>();
-        lights = new ArrayList<Light>();
-        guiTextures = new ArrayList<GuiTexture>();
-        waters = new ArrayList<WaterTile>();
 
         sun = new Sun(new Vector3f(10000, 15000, -10000));
         lights.add(sun);
@@ -236,16 +241,16 @@ public class MainGameLoop {
         float distance = 2 * (camera.getPosition().y - waters.get(0).getHeight());
         camera.getPosition().y -= distance;
         camera.invertPitch();
-        renderer.renderScene(entities, normalEntities, lamps, lights, terrains, camera, player, new Vector4f(0, 1, 0, -waters.get(0).getHeight()));
+        renderer.renderScene(entities, normalEntities, lamps, lights, terrains, camera, new Vector4f(0, 1, 0, -waters.get(0).getHeight()));
         camera.getPosition().y += distance;
         camera.invertPitch();
 
         waterFrameBuffers.bindRefractionFrameBuffer();
-        renderer.renderScene(entities, normalEntities, lamps, lights, terrains, camera, player, new Vector4f(0, -1, 0, waters.get(0).getHeight()));
+        renderer.renderScene(entities, normalEntities, lamps, lights, terrains, camera, new Vector4f(0, -1, 0, waters.get(0).getHeight()));
 
         waterFrameBuffers.unbindCurrentFrameBuffer();
         GL11.glDisable(GL30.GL_CLIP_DISTANCE0);
-        renderer.renderScene(entities, normalEntities, lamps, lights, terrains, camera, player, new Vector4f(0, -1, 0, 1000000));
+        renderer.renderScene(entities, normalEntities, lamps, lights, terrains, camera, new Vector4f(0, -1, 0, 1000000));
         waterRenderer.render(waters, camera, lights.get(0));
 
         if (camera.getPosition().y <= waters.get(0).getHeight()) guiRenderer.renderWater(waterVision);

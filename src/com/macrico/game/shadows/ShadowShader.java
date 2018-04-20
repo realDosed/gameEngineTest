@@ -14,7 +14,6 @@ public class ShadowShader extends ShaderProgram {
         super(VERTEX_FILE, FRAGMENT_FILE);
     }
 
-    @Override
     protected void getAllUniformLocations() {
         location_mvpMatrix = super.getUniformLocation("mvpMatrix");
 
@@ -24,9 +23,8 @@ public class ShadowShader extends ShaderProgram {
         super.loadMatrix(location_mvpMatrix, mvpMatrix);
     }
 
-    @Override
     protected void bindAttributes() {
         super.bindAttribute(0, "in_position");
+        super.bindAttribute(1, "in_textureCoords");
     }
-
 }

@@ -12,6 +12,7 @@ import com.macrico.game.skybox.SkyboxRenderer;
 import com.macrico.game.terrains.Terrain;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector4f;
@@ -74,12 +75,11 @@ public class MasterRenderer {
         shadowMapRenderer = new ShadowMapMasterRenderer(cam);
     }
 
-    public void renderScene(List<Entity> entities, List<Entity> normalMapEntities, List<Lamp> lamps, List<Light> lights, List<Terrain> terrains, Camera camera, Player player, Vector4f clipPlane) {
+    public void renderScene(List<Entity> entities, List<Entity> normalMapEntities, List<Lamp> lamps, List<Light> lights, List<Terrain> terrains, Camera camera, Vector4f clipPlane) {
         for (Terrain terrain : terrains) processTerrain(terrain);
         for (Entity entity : entities) processEntity(entity);
         for (Entity normalEntity : normalMapEntities) processNormalMapEntity(normalEntity);
         for (Lamp lamp : lamps) processEntity(lamp);
-        processEntity(player);
         render(lights, camera, clipPlane);
     }
 
@@ -105,7 +105,7 @@ public class MasterRenderer {
         shader.loadSkyColor(FINAL_RED, FINAL_GREEN, FINAL_BLUE);
         shader.loadLights(lights);
         shader.loadViewMatrix(camera);
-        renderer.render(entities);
+        renderer.render(entities, shadowMapRenderer.getToShadowMapSpaceMatrix());
         shader.stop();
 
         normalRenderer.render(normalEntities, clipPlane, lights, camera);
@@ -115,7 +115,7 @@ public class MasterRenderer {
         terrainShader.loadSkyColor(FINAL_RED, FINAL_GREEN, FINAL_BLUE);
         terrainShader.loadLights(lights);
         terrainShader.loadViewMatrix(camera);
-        terrainRenderer.render(terrains);
+        terrainRenderer.render(terrains, shadowMapRenderer.getToShadowMapSpaceMatrix());
         terrainShader.stop();
 
         skyboxRenderer.render(camera, FINAL_RED, FINAL_GREEN, FINAL_BLUE);
@@ -176,6 +176,8 @@ public class MasterRenderer {
         GL11.glEnable(GL11.GL_DEPTH_TEST);
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
         GL11.glClearColor(FINAL_RED, FINAL_GREEN, FINAL_BLUE, 1);
+        GL13.glActiveTexture(GL13.GL_TEXTURE5);
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, getShadowMapTexture());
     }
 
     private void createProjectionMatrix() {
