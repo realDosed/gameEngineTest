@@ -14,6 +14,8 @@ public class ShadowBox {
     private static final Vector4f FORWARD = new Vector4f(0, 0, -1, 0);
     private static final float SHADOW_DISTANCE = 100;
 
+    private static final float SHADOW_FOV = MasterRenderer.FOV / 3f;
+
     private float minX, maxX;
     private float minY, maxY;
     private float minZ, maxZ;
@@ -117,10 +119,8 @@ public class ShadowBox {
         return points;
     }
 
-    private Vector4f calculateLightSpaceFrustumCorner(Vector3f startPoint, Vector3f direction,
-                                                      float width) {
-        Vector3f point = Vector3f.add(startPoint,
-                new Vector3f(direction.x * width, direction.y * width, direction.z * width), null);
+    private Vector4f calculateLightSpaceFrustumCorner(Vector3f startPoint, Vector3f direction, float width) {
+        Vector3f point = Vector3f.add(startPoint, new Vector3f(direction.x * width, direction.y * width, direction.z * width), null);
         Vector4f point4f = new Vector4f(point.x, point.y, point.z, 1f);
         Matrix4f.transform(lightViewMatrix, point4f, point4f);
         return point4f;
@@ -134,8 +134,8 @@ public class ShadowBox {
     }
 
     private void calculateWidthsAndHeights() {
-        farWidth = (float) (SHADOW_DISTANCE * Math.tan(Math.toRadians(MasterRenderer.FOV)));
-        nearWidth = (float) (MasterRenderer.NEAR_PLANE * Math.tan(Math.toRadians(MasterRenderer.FOV)));
+        farWidth = (float) (SHADOW_DISTANCE * Math.tan(Math.toRadians(SHADOW_FOV))) * 3f;
+        nearWidth = (float) (MasterRenderer.NEAR_PLANE * Math.tan(Math.toRadians(SHADOW_FOV))) * 3f;
         farHeight = farWidth / getAspectRatio();
         nearHeight = nearWidth / getAspectRatio();
     }

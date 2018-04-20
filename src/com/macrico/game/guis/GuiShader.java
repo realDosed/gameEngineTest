@@ -5,8 +5,8 @@ import org.lwjgl.util.vector.Matrix4f;
 
 public class GuiShader extends ShaderProgram {
 
-    private static final String VERTEX_FILE = "src/com/macrico/game/guis/guiVertexShader.txt";
-    private static final String FRAGMENT_FILE = "src/com/macrico/game/guis/guiFragmentShader.txt";
+    private static final String VERTEX_FILE = "/com/macrico/game/guis/guiVertexShader.txt";
+    private static final String FRAGMENT_FILE = "/com/macrico/game/guis/guiFragmentShader.txt";
 
     private int location_transformationMatrix;
 

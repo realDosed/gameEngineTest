@@ -5,8 +5,8 @@ import org.lwjgl.util.vector.Matrix4f;
 
 public class ParticleShader extends ShaderProgram {
 
-    private static final String VERTEX_FILE = "src/com/macrico/game/particles/particleVShader.txt";
-    private static final String FRAGMENT_FILE = "src/com/macrico/game/particles/particleFShader.txt";
+    private static final String VERTEX_FILE = "/com/macrico/game/particles/particleVShader.txt";
+    private static final String FRAGMENT_FILE = "/com/macrico/game/particles/particleFShader.txt";
 
     private int location_numberOfRows;
     private int location_projectionMatrix;

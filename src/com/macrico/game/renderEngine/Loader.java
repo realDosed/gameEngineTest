@@ -10,6 +10,7 @@ import org.newdawn.slick.opengl.TextureLoader;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -94,7 +95,7 @@ public class Loader {
         Texture texture = null;
 
         try {
-            texture = TextureLoader.getTexture("PNG", new FileInputStream("res/" + fileName + ".png"));
+            texture = TextureLoader.getTexture("PNG", Class.class.getResourceAsStream("/res/" + fileName + ".png"));
 
             GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
 
@@ -120,7 +121,7 @@ public class Loader {
         Texture texture = null;
 
         try {
-            texture = TextureLoader.getTexture("PNG", new FileInputStream("res/" + fileName + ".png"));
+            texture = TextureLoader.getTexture("PNG", Class.class.getResourceAsStream("/res/" + fileName + ".png"));
 
             GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
 
@@ -155,7 +156,7 @@ public class Loader {
         GL11.glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, texID);
 
         for (int i = 0; i < textureFiles.length; i++) {
-            TextureData data = decodeTextureFile("res/" + textureFiles[i] + ".png");
+            TextureData data = decodeTextureFile(textureFiles[i]);
             GL11.glTexImage2D(GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL11.GL_RGBA, data.getWidth(), data.getHeight(), 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, data.getBuffer());
         }
 
@@ -174,7 +175,7 @@ public class Loader {
         ByteBuffer buffer = null;
 
         try {
-            FileInputStream in = new FileInputStream(fileName);
+            InputStream in = Class.class.getResourceAsStream("/res/" + fileName + ".png");
             PNGDecoder decoder = new PNGDecoder(in);
             width = decoder.getWidth();
             height = decoder.getHeight();

@@ -5,8 +5,8 @@ import org.lwjgl.util.vector.Matrix4f;
 
 public class ShadowShader extends ShaderProgram {
 
-    private static final String VERTEX_FILE = "src/com/macrico/game/shadows/shadowVertexShader.txt";
-    private static final String FRAGMENT_FILE = "src/com/macrico/game/shadows/shadowFragmentShader.txt";
+    private static final String VERTEX_FILE = "/com/macrico/game/shadows/shadowVertexShader.txt";
+    private static final String FRAGMENT_FILE = "/com/macrico/game/shadows/shadowFragmentShader.txt";
 
     private int location_mvpMatrix;
 

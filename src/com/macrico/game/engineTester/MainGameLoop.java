@@ -31,7 +31,6 @@ import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -86,14 +85,9 @@ public class MainGameLoop {
 
         float x = random.nextFloat() * -800;
         float z = random.nextFloat() * -800;
-        float y = terrains.get(0).getHeightOfTerrain(x, z);
-        if (y > -4.0) {
-            player = new Player(playerTexture, new Vector3f(x, y, z), 0, random.nextFloat() * 360, 0, 0.2f);
-            entities.add(player);
-        } else {
-            player = new Player(playerTexture, new Vector3f(-200, 0, -200), 0, random.nextFloat() * 360, 0, 0.2f);
-            entities.add(player);
-        }
+        player = new Player(playerTexture, new Vector3f(x, 0, z), 0, random.nextFloat() * 360, 0, 0.2f);
+        entities.add(player);
+
         camera = new Camera(player, terrains.get(0));
 
         renderer = new MasterRenderer(loader, camera);
@@ -104,15 +98,14 @@ public class MainGameLoop {
 
         sun = new Sun(new Vector3f(10000, 15000, -10000));
         lights.add(sun);
+        setWaters();
+        setParticles();
         setEntities();
 
         guiTextures.add(new GuiTexture(loader.loadTexture("textures/pixels/vignetteTest"), new Vector2f(0, 0), new Vector2f(1, 1)));
         for (int i = 0; i < 5; i++) {
             guiTextures.add(new GuiTexture(loader.loadTexture("textures/pixels/heart"), new Vector2f(-0.93f + (0.065f * i), 0.90f), new Vector2f(0.03f, 0.05f)));
         }
-
-        setWaters();
-        setParticles();
 
         waterVision = new GuiTexture(loader.loadTexture("textures/pixels/waterVision"), new Vector2f(0, 0), new Vector2f(1, 1));
 
@@ -151,19 +144,19 @@ public class MainGameLoop {
             float x = random.nextFloat() * -800;
             float z = random.nextFloat() * -800;
             float y = terrains.get(0).getHeightOfTerrain(x, z);
-            if (y > -4.0)
+            if (y > waters.get(0).getHeight())
                 entities.add(new Entity(fernTexture, random.nextInt(4), new Vector3f(x, y, z), 0, random.nextFloat() * 360, 0, 0.5f));
 
             x = random.nextFloat() * -800;
             z = random.nextFloat() * -800;
             y = terrains.get(0).getHeightOfTerrain(x, z);
-            if (y > -4.0)
+            if (y > waters.get(0).getHeight())
                 entities.add(new Entity(tree2Texture, new Vector3f(x, y, z), 0, random.nextFloat() * 360, 0, 0.5f));
 
             x = random.nextFloat() * -800;
             z = random.nextFloat() * -800;
             y = terrains.get(0).getHeightOfTerrain(x, z);
-            if (y > -4.0)
+            if (y > waters.get(0).getHeight())
                 entities.add(new Entity(tree1Texture, new Vector3f(x, y, z), 0, random.nextFloat() * 360, 0, 1));
 
             x = random.nextFloat() * -800;
@@ -177,7 +170,7 @@ public class MainGameLoop {
         waterFrameBuffers = new WaterFrameBuffers();
         waterShader = new WaterShader();
         waterRenderer = new WaterRenderer(loader, waterShader, renderer.getProjectionMatrix(), waterFrameBuffers);
-        waters.add(new WaterTile(-400, -400, -4));
+        waters.add(new WaterTile(-400, -400, -3));
     }
 
     private void setParticles() {

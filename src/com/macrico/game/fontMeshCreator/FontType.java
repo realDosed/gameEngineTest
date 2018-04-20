@@ -1,13 +1,11 @@
 package com.macrico.game.fontMeshCreator;
 
-import java.io.File;
-
 public class FontType {
 
     private int textureAtlas;
     private TextMeshCreator loader;
 
-    public FontType(int textureAtlas, File fontFile) {
+    public FontType(int textureAtlas, String fontFile) {
         this.textureAtlas = textureAtlas;
         this.loader = new TextMeshCreator(fontFile);
     }

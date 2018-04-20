@@ -14,13 +14,7 @@ public class OBJFileLoader {
     private static final String RES_LOC = "res/";
 
     public static ModelData loadOBJ(String objFileName) {
-        FileReader isr = null;
-        File objFile = new File(RES_LOC + objFileName + ".obj");
-        try {
-            isr = new FileReader(objFile);
-        } catch (FileNotFoundException e) {
-            System.err.println("File not found in /res/; don't use any extension");
-        }
+        InputStreamReader isr = new InputStreamReader(Class.class.getResourceAsStream("/res/" + objFileName + ".obj"));
         BufferedReader reader = new BufferedReader(isr);
         String line;
 
@@ -75,13 +69,7 @@ public class OBJFileLoader {
     }
 
     public static RawModel loadObjModel(String objFileName, Loader loader) {
-        FileReader isr = null;
-        File objFile = new File(RES_LOC + objFileName + ".obj");
-        try {
-            isr = new FileReader(objFile);
-        } catch (FileNotFoundException e) {
-            System.err.println("File not found in /res/; don't use any extension");
-        }
+        InputStreamReader isr = new InputStreamReader(Class.class.getResourceAsStream("/res/" + objFileName + ".obj"));
         BufferedReader reader = new BufferedReader(isr);
         String line;
 

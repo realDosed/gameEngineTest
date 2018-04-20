@@ -14,8 +14,8 @@ public class TerrainShader extends ShaderProgram {
 
     private static final int MAX_LIGHTS = 4;
 
-    private static final String VERTEX_FILE = "src/com/macrico/game/terrains/terrainVertexShader.txt";
-    private static final String FRAGMENT_FILE = "src/com/macrico/game/terrains/terrainFragmentShader.txt";
+    private static final String VERTEX_FILE = "/com/macrico/game/terrains/terrainVertexShader.txt";
+    private static final String FRAGMENT_FILE = "/com/macrico/game/terrains/terrainFragmentShader.txt";
 
     private int location_transformationMatrix;
     private int location_projectionMatrix;

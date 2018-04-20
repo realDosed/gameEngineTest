@@ -2,10 +2,7 @@ package com.macrico.game.fontMeshCreator;
 
 import org.lwjgl.opengl.Display;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,7 +32,7 @@ public class MetaFile {
     private BufferedReader reader;
     private Map<String, String> values = new HashMap<>();
 
-    protected MetaFile(File file) {
+    protected MetaFile(String file) {
         this.aspectRatio = (double) Display.getWidth() / (double) Display.getHeight();
         openFile(file);
         loadPaddingData();
@@ -93,9 +90,10 @@ public class MetaFile {
         }
     }
 
-    private void openFile(File file) {
+    private void openFile(String file) {
         try {
-            reader = new BufferedReader(new FileReader(file));
+            InputStreamReader isr = new InputStreamReader(Class.class.getResourceAsStream("/res/" + file + ".fnt"));
+            reader = new BufferedReader(isr);
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println("Couldn't read font meta file!");

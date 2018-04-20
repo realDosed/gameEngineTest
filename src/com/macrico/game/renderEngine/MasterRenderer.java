@@ -27,9 +27,9 @@ public class MasterRenderer {
     public static final float NEAR_PLANE = 0.1f;
     public static final float FAR_PLANE = 1000;
 
-    private static final float RED = 0.494f; //0.5444f;
-    private static final float GREEN = 0.803f; //0.62f;
-    private static final float BLUE = 0.862f; //0.69f;
+    private static final float RED = 0.494f;
+    private static final float GREEN = 0.803f;
+    private static final float BLUE = 0.862f;
     private static final float NIGHT_RED = 0.05f;
     private static final float NIGHT_GREEN = 0.05f;
     private static final float NIGHT_BLUE = 0.05f;
