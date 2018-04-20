@@ -22,8 +22,6 @@ public class WaterRenderer {
     private static final String NORMAL_MAP = "textures/matchingNormalMap";
     private static final float WAVE_SPEED = 0.03f;
 
-    private static final int VERTEX_COUNT = 128;
-
     private RawModel quad;
     private WaterShader shader;
     private WaterFrameBuffers fbos;
@@ -89,7 +87,6 @@ public class WaterRenderer {
     }
 
     private void setUpVAO(Loader loader) {
-        // Just x and z vectex positions here, y is set to 0 in v.shader
         float[] vertices = {-1, -1, -1, 1, 1, -1, 1, -1, -1, 1, 1, 1};
         quad = loader.loadToVAO(vertices, 2);
     }

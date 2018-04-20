@@ -17,13 +17,12 @@ public class TextMeshCreator {
 
     protected TextMeshData createTextMesh(GUIText text) {
         List<Line> lines = createStructure(text);
-        TextMeshData data = createQuadVertices(text, lines);
-        return data;
+        return createQuadVertices(text, lines);
     }
 
     private List<Line> createStructure(GUIText text) {
         char[] chars = text.getTextString().toCharArray();
-        List<Line> lines = new ArrayList<Line>();
+        List<Line> lines = new ArrayList<>();
         Line currentLine = new Line(metaData.getSpaceWidth(), text.getFontSize(), text.getMaxLineSize());
         Word currentWord = new Word(text.getFontSize());
         for (char c : chars) {

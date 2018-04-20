@@ -1,17 +1,12 @@
 package com.macrico.game.engineTester;
 
 import com.macrico.game.entities.*;
-import com.macrico.game.fontMeshCreator.FontType;
-import com.macrico.game.fontMeshCreator.GUIText;
 import com.macrico.game.fontRendering.TextMaster;
 import com.macrico.game.guis.GuiRenderer;
 import com.macrico.game.guis.GuiTexture;
 import com.macrico.game.models.TexturedModel;
 import com.macrico.game.normalMappingObjConverter.NormalMappedObjLoader;
-import com.macrico.game.objConverter.ModelData;
 import com.macrico.game.objConverter.OBJFileLoader;
-import com.macrico.game.objConverter.OBJLoader;
-import com.macrico.game.particles.Particle;
 import com.macrico.game.particles.ParticleMaster;
 import com.macrico.game.particles.ParticleSystem;
 import com.macrico.game.particles.ParticleTexture;
@@ -56,7 +51,7 @@ public class MainGameLoop {
     private List<GuiTexture> guiTextures;
     private List<WaterTile> waters;
 
-    private TerrainTexture backgroundTexture, rTexture, gTexture, bTexture, blendMap;
+    private TerrainTexture blendMap;
     private TerrainTexturePack texturePack;
     private TexturedModel tree1Texture, tree2Texture, fernTexture, lampTexture, playerTexture, boulderTexture;
 
@@ -67,7 +62,6 @@ public class MainGameLoop {
 
     private MasterRenderer renderer;
     private GuiRenderer guiRenderer;
-    private ParticleSystem particleSystem;
 
     private WaterFrameBuffers waterFrameBuffers;
     private WaterShader waterShader;
@@ -80,15 +74,15 @@ public class MainGameLoop {
         loader = new Loader();
 
         setTextures();
-        terrains = new ArrayList<Terrain>();
+        terrains = new ArrayList<>();
         terrains.add(new Terrain(-1, -1, loader, texturePack, blendMap));
 
-        entities = new ArrayList<Entity>();
-        normalEntities = new ArrayList<Entity>();
-        lamps = new ArrayList<Lamp>();
-        lights = new ArrayList<Light>();
-        guiTextures = new ArrayList<GuiTexture>();
-        waters = new ArrayList<WaterTile>();
+        entities = new ArrayList<>();
+        normalEntities = new ArrayList<>();
+        lamps = new ArrayList<>();
+        lights = new ArrayList<>();
+        guiTextures = new ArrayList<>();
+        waters = new ArrayList<>();
 
         float x = random.nextFloat() * -800;
         float z = random.nextFloat() * -800;
@@ -121,26 +115,25 @@ public class MainGameLoop {
         setParticles();
 
         waterVision = new GuiTexture(loader.loadTexture("textures/pixels/waterVision"), new Vector2f(0, 0), new Vector2f(1, 1));
-        //guiTextures.add(new GuiTexture(renderer.getShadowMapTexture(), new Vector2f(0.5f, 0.5f), new Vector2f(0.5f, 0.5f)));
 
         runGameLoop();
         cleanUp();
     }
 
     private void setTextures() {
-        backgroundTexture = new TerrainTexture(loader.loadTexture("textures/pixels/dirt"));
-        rTexture = new TerrainTexture(loader.loadTexture("textures/pixels/grass_top"));
-        gTexture = new TerrainTexture(loader.loadTexture("textures/pixels/grass_path_top"));
-        bTexture = new TerrainTexture(loader.loadTexture("textures/pixels/cobblestone"));
+        TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("textures/pixels/dirt"));
+        TerrainTexture rTexture = new TerrainTexture(loader.loadTexture("textures/pixels/grass_top"));
+        TerrainTexture gTexture = new TerrainTexture(loader.loadTexture("textures/pixels/grass_path_top"));
+        TerrainTexture bTexture = new TerrainTexture(loader.loadTexture("textures/pixels/cobblestone"));
         blendMap = new TerrainTexture(loader.loadTexture("textures/blendMap1"));
 
         texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
 
-        tree1Texture = new TexturedModel(OBJLoader.loadObjModel("models/pine", loader), new ModelTexture(loader.loadTexture("textures/pixels/pine")));
-        tree2Texture = new TexturedModel(OBJLoader.loadObjModel("models/lowPolyTree", loader), new ModelTexture(loader.loadTexture("textures/pixels/lowPolyTree")));
-        fernTexture = new TexturedModel(OBJLoader.loadObjModel("models/fern", loader), new ModelTexture(loader.loadTexture("textures/pixels/fern")));
-        lampTexture = new TexturedModel(OBJLoader.loadObjModel("models/lamp", loader), new ModelTexture(loader.loadTexture("textures/pixels/lamp")));
-        playerTexture = new TexturedModel(OBJLoader.loadObjModel("models/person", loader), new ModelTexture(loader.loadTexture("textures/pixels/playerTexture")));
+        tree1Texture = new TexturedModel(OBJFileLoader.loadObjModel("models/pine", loader), new ModelTexture(loader.loadTexture("textures/pixels/pine")));
+        tree2Texture = new TexturedModel(OBJFileLoader.loadObjModel("models/lowPolyTree", loader), new ModelTexture(loader.loadTexture("textures/pixels/lowPolyTree")));
+        fernTexture = new TexturedModel(OBJFileLoader.loadObjModel("models/fern", loader), new ModelTexture(loader.loadTexture("textures/pixels/fern")));
+        lampTexture = new TexturedModel(OBJFileLoader.loadObjModel("models/lamp", loader), new ModelTexture(loader.loadTexture("textures/pixels/lamp")));
+        playerTexture = new TexturedModel(OBJFileLoader.loadObjModel("models/person", loader), new ModelTexture(loader.loadTexture("textures/pixels/playerTexture")));
         boulderTexture = new TexturedModel(NormalMappedObjLoader.loadOBJ("models/boulder", loader), new ModelTexture(loader.loadTexture("textures/boulder")));
 
         tree1Texture.getTexture().setHasTransparency(true);
@@ -188,7 +181,7 @@ public class MainGameLoop {
     }
 
     private void setParticles() {
-        particleSystem = new ParticleSystem(new ParticleTexture(loader.loadTexture("particles/particleAtlas"), 4, false), 50, 25, 0.3f, 4, 1);
+        ParticleSystem particleSystem = new ParticleSystem(new ParticleTexture(loader.loadTexture("particles/particleAtlas"), 4, false), 50, 25, 0.3f, 4, 1);
         particleSystem.randomizeRotation();
         particleSystem.setDirection(new Vector3f(0, 1, 0), 0.1f);
         particleSystem.setLifeError(0.1f);

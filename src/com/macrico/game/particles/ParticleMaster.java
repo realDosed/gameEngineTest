@@ -8,7 +8,7 @@ import java.util.*;
 
 public class ParticleMaster {
 
-    private static Map<ParticleTexture, List<Particle>> particles = new HashMap<ParticleTexture, List<Particle>>();
+    private static Map<ParticleTexture, List<Particle>> particles = new HashMap<>();
     private static ParticleRenderer renderer;
 
     public static void init(Loader loader, Matrix4f projectionMatrix) {
@@ -46,11 +46,7 @@ public class ParticleMaster {
     }
 
     public static void addParticle(Particle particle) {
-        List<Particle> list = particles.get(particle.getTexture());
-        if (list == null) {
-            list = new ArrayList<Particle>();
-            particles.put(particle.getTexture(), list);
-        }
+        List<Particle> list = particles.computeIfAbsent(particle.getTexture(), k -> new ArrayList<>());
         list.add(particle);
     }
 }

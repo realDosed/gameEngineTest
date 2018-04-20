@@ -16,7 +16,6 @@ public class Camera {
     private Vector3f position = new Vector3f(0, 5, 0);
     private float pitch = 20;
     private float yaw = 0;
-    private float roll;
 
     private Player player;
     private Terrain terrain;
@@ -103,10 +102,6 @@ public class Camera {
 
     public float getYaw() {
         return yaw;
-    }
-
-    public float getRoll() {
-        return roll;
     }
 
     private void calculateCameraPosition(float horizontalDistance, float verticalDistance) {

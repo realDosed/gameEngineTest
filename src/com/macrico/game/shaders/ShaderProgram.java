@@ -36,7 +36,7 @@ public abstract class ShaderProgram {
     protected abstract void getAllUniformLocations();
 
     protected int getUniformLocation(String uniformName) {
-        return GL20.glGetUniformLocation(programID ,uniformName);
+        return GL20.glGetUniformLocation(programID, uniformName);
     }
 
     public void start() {

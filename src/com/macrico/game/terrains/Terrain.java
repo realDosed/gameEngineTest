@@ -2,18 +2,11 @@ package com.macrico.game.terrains;
 
 import com.macrico.game.models.RawModel;
 import com.macrico.game.renderEngine.Loader;
-import com.macrico.game.textures.ModelTexture;
 import com.macrico.game.textures.TerrainTexture;
 import com.macrico.game.textures.TerrainTexturePack;
 import com.macrico.game.toolbox.Maths;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
-
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.Random;
 
 public class Terrain {
 

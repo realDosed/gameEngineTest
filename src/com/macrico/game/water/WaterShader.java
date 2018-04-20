@@ -5,7 +5,6 @@ import com.macrico.game.entities.Light;
 import com.macrico.game.shaders.ShaderProgram;
 import com.macrico.game.toolbox.Maths;
 import org.lwjgl.util.vector.Matrix4f;
-import org.lwjgl.util.vector.Vector3f;
 
 public class WaterShader extends ShaderProgram {
 

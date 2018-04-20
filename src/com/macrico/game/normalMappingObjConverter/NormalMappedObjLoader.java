@@ -23,25 +23,25 @@ public class NormalMappedObjLoader {
         }
         BufferedReader reader = new BufferedReader(isr);
         String line;
-        List<VertexNM> vertices = new ArrayList<VertexNM>();
-        List<Vector2f> textures = new ArrayList<Vector2f>();
-        List<Vector3f> normals = new ArrayList<Vector3f>();
-        List<Integer> indices = new ArrayList<Integer>();
+        List<VertexNM> vertices = new ArrayList<>();
+        List<Vector2f> textures = new ArrayList<>();
+        List<Vector3f> normals = new ArrayList<>();
+        List<Integer> indices = new ArrayList<>();
         try {
             while (true) {
                 line = reader.readLine();
                 if (line.startsWith("v ")) {
                     String[] currentLine = line.split(" ");
-                    Vector3f vertex = new Vector3f((float) Float.valueOf(currentLine[1]), (float) Float.valueOf(currentLine[2]), (float) Float.valueOf(currentLine[3]));
+                    Vector3f vertex = new Vector3f(Float.valueOf(currentLine[1]), Float.valueOf(currentLine[2]), Float.valueOf(currentLine[3]));
                     VertexNM newVertex = new VertexNM(vertices.size(), vertex);
                     vertices.add(newVertex);
                 } else if (line.startsWith("vt ")) {
                     String[] currentLine = line.split(" ");
-                    Vector2f texture = new Vector2f((float) Float.valueOf(currentLine[1]), (float) Float.valueOf(currentLine[2]));
+                    Vector2f texture = new Vector2f(Float.valueOf(currentLine[1]), Float.valueOf(currentLine[2]));
                     textures.add(texture);
                 } else if (line.startsWith("vn ")) {
                     String[] currentLine = line.split(" ");
-                    Vector3f normal = new Vector3f((float) Float.valueOf(currentLine[1]), (float) Float.valueOf(currentLine[2]), (float) Float.valueOf(currentLine[3]));
+                    Vector3f normal = new Vector3f(Float.valueOf(currentLine[1]), Float.valueOf(currentLine[2]), Float.valueOf(currentLine[3]));
                     normals.add(normal);
                 } else if (line.startsWith("f ")) {
                     break;
@@ -55,7 +55,7 @@ public class NormalMappedObjLoader {
                 VertexNM v0 = processVertex(vertex1, vertices, indices);
                 VertexNM v1 = processVertex(vertex2, vertices, indices);
                 VertexNM v2 = processVertex(vertex3, vertices, indices);
-                calculateTangents(v0, v1, v2, textures);//NEW
+                calculateTangents(v0, v1, v2, textures);
                 line = reader.readLine();
             }
             reader.close();
@@ -73,7 +73,6 @@ public class NormalMappedObjLoader {
         return loader.loadToVAO(verticesArray, texturesArray, normalsArray, tangentsArray, indicesArray);
     }
 
-    //NEW
     private static void calculateTangents(VertexNM v0, VertexNM v1, VertexNM v2, List<Vector2f> textures) {
         Vector3f delatPos1 = Vector3f.sub(v1.getPosition(), v0.getPosition(), null);
         Vector3f delatPos2 = Vector3f.sub(v2.getPosition(), v0.getPosition(), null);
@@ -152,7 +151,7 @@ public class NormalMappedObjLoader {
             if (anotherVertex != null) {
                 return dealWithAlreadyProcessedVertex(anotherVertex, newTextureIndex, newNormalIndex, indices, vertices);
             } else {
-                VertexNM duplicateVertex = previousVertex.duplicate(vertices.size());//NEW
+                VertexNM duplicateVertex = previousVertex.duplicate(vertices.size());
                 duplicateVertex.setTextureIndex(newTextureIndex);
                 duplicateVertex.setNormalIndex(newNormalIndex);
                 previousVertex.setDuplicateVertex(duplicateVertex);

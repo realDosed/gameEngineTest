@@ -2,7 +2,6 @@ package com.macrico.game.skybox;
 
 import com.macrico.game.entities.Camera;
 import com.macrico.game.renderEngine.DisplayManager;
-import com.macrico.game.renderEngine.MasterRenderer;
 import com.macrico.game.shaders.ShaderProgram;
 import com.macrico.game.toolbox.Maths;
 import org.lwjgl.util.vector.Matrix4f;
@@ -28,11 +27,11 @@ public class SkyboxShader extends ShaderProgram {
         super(VERTEX_FILE, FRAGMENT_FILE);
     }
 
-    public void loadProjectionMatrix(Matrix4f matrix){
+    public void loadProjectionMatrix(Matrix4f matrix) {
         super.loadMatrix(location_projectionMatrix, matrix);
     }
 
-    public void loadViewMatrix(Camera camera){
+    public void loadViewMatrix(Camera camera) {
         Matrix4f matrix = Maths.createViewMatrix(camera);
         matrix.m30 = 0;
         matrix.m31 = 0;

@@ -1,8 +1,6 @@
 package com.macrico.game.terrains;
 
 import com.macrico.game.models.RawModel;
-import com.macrico.game.terrains.TerrainShader;
-import com.macrico.game.terrains.Terrain;
 import com.macrico.game.textures.TerrainTexturePack;
 import com.macrico.game.toolbox.Maths;
 import org.lwjgl.opengl.GL11;

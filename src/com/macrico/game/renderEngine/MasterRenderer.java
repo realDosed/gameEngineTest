@@ -13,11 +13,9 @@ import com.macrico.game.terrains.Terrain;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
-import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector4f;
 
-import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -48,9 +46,9 @@ public class MasterRenderer {
     private TerrainRenderer terrainRenderer;
     private TerrainShader terrainShader = new TerrainShader();
 
-    private Map<TexturedModel, List<Entity>> entities = new HashMap<TexturedModel, List<Entity>>();
-    private Map<TexturedModel, List<Entity>> normalEntities = new HashMap<TexturedModel, List<Entity>>();
-    private List<Terrain> terrains = new ArrayList<Terrain>();
+    private Map<TexturedModel, List<Entity>> entities = new HashMap<>();
+    private Map<TexturedModel, List<Entity>> normalEntities = new HashMap<>();
+    private List<Terrain> terrains = new ArrayList<>();
 
     private NormalMappingRenderer normalRenderer;
     private SkyboxRenderer skyboxRenderer;
@@ -125,29 +123,29 @@ public class MasterRenderer {
         normalEntities.clear();
     }
 
-    public void processTerrain(Terrain terrain) {
+    private void processTerrain(Terrain terrain) {
         terrains.add(terrain);
     }
 
-    public void processEntity(Entity entity) {
+    private void processEntity(Entity entity) {
         TexturedModel entityModel = entity.getModel();
         List<Entity> batch = entities.get(entityModel);
         if (batch != null) {
             batch.add(entity);
         } else {
-            List<Entity> newBatch = new ArrayList<Entity>();
+            List<Entity> newBatch = new ArrayList<>();
             newBatch.add(entity);
             entities.put(entityModel, newBatch);
         }
     }
 
-    public void processNormalMapEntity(Entity entity) {
+    private void processNormalMapEntity(Entity entity) {
         TexturedModel entityModel = entity.getModel();
         List<Entity> batch = normalEntities.get(entityModel);
         if (batch != null) {
             batch.add(entity);
         } else {
-            List<Entity> newBatch = new ArrayList<Entity>();
+            List<Entity> newBatch = new ArrayList<>();
             newBatch.add(entity);
             normalEntities.put(entityModel, newBatch);
         }
@@ -161,7 +159,7 @@ public class MasterRenderer {
         entities.clear();
     }
 
-    public int getShadowMapTexture() {
+    private int getShadowMapTexture() {
         return shadowMapRenderer.getShadowMap();
     }
 
@@ -172,7 +170,7 @@ public class MasterRenderer {
         shadowMapRenderer.cleanUp();
     }
 
-    public void prepare() {
+    private void prepare() {
         GL11.glEnable(GL11.GL_DEPTH_TEST);
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
         GL11.glClearColor(FINAL_RED, FINAL_GREEN, FINAL_BLUE, 1);
@@ -250,7 +248,7 @@ public class MasterRenderer {
             day = false;
             evening = false;
 
-            blendFactor = (time - 0) / (900 - 0);
+            blendFactor = (time - 0) / (900);
         } else if (time >= 900 && time < 1200) {
             night = false;
             morning = true;
@@ -274,10 +272,6 @@ public class MasterRenderer {
             blendFactor = (time - 2100) / (2400 - 2100);
         }
         inverseBlendFactor = 1.0f - blendFactor;
-    }
-
-    public static float getTime() {
-        return time;
     }
 
     public static boolean isNight() {

@@ -54,8 +54,7 @@ public class MousePicker {
         Vector2f normalizedCoords = getNormalisedDeviceCoordinates(mouseX, mouseY);
         Vector4f clipCoords = new Vector4f(normalizedCoords.x, normalizedCoords.y, -1.0f, 1.0f);
         Vector4f eyeCoords = toEyeCoords(clipCoords);
-        Vector3f worldRay = toWorldCoords(eyeCoords);
-        return worldRay;
+        return toWorldCoords(eyeCoords);
     }
 
     private Vector3f toWorldCoords(Vector4f eyeCoords) {
@@ -77,8 +76,6 @@ public class MousePicker {
         float y = (2.0f * mouseY) / Display.getHeight() - 1f;
         return new Vector2f(x, y);
     }
-
-    //**********************************************************
 
     private Vector3f getPointOnRay(Vector3f ray, float distance) {
         Vector3f camPos = camera.getPosition();
@@ -108,11 +105,7 @@ public class MousePicker {
     private boolean intersectionInRange(float start, float finish, Vector3f ray) {
         Vector3f startPoint = getPointOnRay(ray, start);
         Vector3f endPoint = getPointOnRay(ray, finish);
-        if (!isUnderGround(startPoint) && isUnderGround(endPoint)) {
-            return true;
-        } else {
-            return false;
-        }
+        return !isUnderGround(startPoint) && isUnderGround(endPoint);
     }
 
     private boolean isUnderGround(Vector3f testPoint) {
@@ -121,11 +114,7 @@ public class MousePicker {
         if (terrain != null) {
             height = terrain.getHeightOfTerrain(testPoint.getX(), testPoint.getZ());
         }
-        if (testPoint.y < height) {
-            return true;
-        } else {
-            return false;
-        }
+        return testPoint.y < height;
     }
 
     private Terrain getTerrain(float worldX, float worldZ) {

@@ -2,7 +2,6 @@ package com.macrico.game.particles;
 
 import com.macrico.game.shaders.ShaderProgram;
 import org.lwjgl.util.vector.Matrix4f;
-import org.lwjgl.util.vector.Vector2f;
 
 public class ParticleShader extends ShaderProgram {
 
