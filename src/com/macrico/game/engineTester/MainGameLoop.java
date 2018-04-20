@@ -116,7 +116,7 @@ public class MainGameLoop {
         setParticles();
 
         waterVision = new GuiTexture(loader.loadTexture("textures/pixels/waterVision"), new Vector2f(0, 0), new Vector2f(1, 1));
-        guiTextures.add(new GuiTexture(renderer.getShadowMapTexture(), new Vector2f(0.5f, 0.5f), new Vector2f(0.5f, 0.5f)));
+        //guiTextures.add(new GuiTexture(renderer.getShadowMapTexture(), new Vector2f(0.5f, 0.5f), new Vector2f(0.5f, 0.5f)));
 
         runGameLoop();
         cleanUp();
