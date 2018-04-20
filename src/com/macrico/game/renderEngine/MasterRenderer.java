@@ -75,18 +75,10 @@ public class MasterRenderer {
     }
 
     public void renderScene(List<Entity> entities, List<Entity> normalMapEntities, List<Lamp> lamps, List<Light> lights, List<Terrain> terrains, Camera camera, Player player, Vector4f clipPlane) {
-        for (Terrain terrain : terrains) {
-            processTerrain(terrain);
-        }
-        for (Entity entity : entities) {
-            processEntity(entity);
-        }
-        for (Entity normalEntity : normalMapEntities) {
-            processNormalMapEntity(normalEntity);
-        }
-        for (Lamp lamp : lamps) {
-            processEntity(lamp);
-        }
+        for (Terrain terrain : terrains) processTerrain(terrain);
+        for (Entity entity : entities) processEntity(entity);
+        for (Entity normalEntity : normalMapEntities) processNormalMapEntity(normalEntity);
+        for (Lamp lamp : lamps) processEntity(lamp);
         processEntity(player);
         render(lights, camera, clipPlane);
     }

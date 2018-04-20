@@ -1,4 +1,4 @@
-package com.macrico.game.renderEngine;
+package com.macrico.game.objConverter;
 
 import com.macrico.game.models.RawModel;
 import com.macrico.game.renderEngine.Loader;
