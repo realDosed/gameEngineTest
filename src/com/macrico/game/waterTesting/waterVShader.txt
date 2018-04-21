@@ -7,6 +7,7 @@ out vec4 clipSpace;
 out vec2 textureCoords;
 out vec3 toCameraVector;
 out vec3 fromLightVector;
+out float visibility;
 
 uniform mat4 transformationMatrix;
 uniform mat4 projectionMatrix;
@@ -14,6 +15,8 @@ uniform mat4 viewMatrix;
 uniform vec3 cameraPosition;
 uniform vec3 lightPosition;
 
+const float density = 0.007;
+const float gradient = 1.5;
 const float tiling = 4.0;
 
 void main(void) {
@@ -25,4 +28,8 @@ void main(void) {
     textureCoords = in_textureCoords * tiling;
     toCameraVector = cameraPosition - worldPosition.xyz;
     fromLightVector = worldPosition.xyz - lightPosition;
+
+    float distance = length(positionRelativeToCam.xyz);
+    visibility = exp(-pow((distance * density), gradient));
+    visibility = clamp(visibility, 0.0, 1.0);
 }

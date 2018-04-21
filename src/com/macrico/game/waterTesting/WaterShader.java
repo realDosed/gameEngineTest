@@ -5,6 +5,7 @@ import com.macrico.game.entities.Light;
 import com.macrico.game.shaders.ShaderProgram;
 import com.macrico.game.toolbox.Maths;
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector3f;
 
 public class WaterShader extends ShaderProgram {
 
@@ -23,6 +24,7 @@ public class WaterShader extends ShaderProgram {
     private int location_lightPosition;
     private int location_lightColor;
     private int location_depthMap;
+    private int location_skyColor;
 
     public WaterShader() {
         super(VERTEX_FILE, FRAGMENT_FILE);
@@ -41,6 +43,7 @@ public class WaterShader extends ShaderProgram {
         location_lightPosition = getUniformLocation("lightPosition");
         location_lightColor = getUniformLocation("lightColor");
         location_depthMap = getUniformLocation("depthMap");
+        location_skyColor = super.getUniformLocation("skyColor");
     }
 
     protected void bindAttributes() {
@@ -77,5 +80,9 @@ public class WaterShader extends ShaderProgram {
 
     public void loadMoveFactor(float factor) {
         super.loadFloat(location_moveFactor, factor);
+    }
+
+    public void loadSkyColor(float r, float g, float b) {
+        super.loadVector(location_skyColor, new Vector3f(r, g, b));
     }
 }

@@ -20,7 +20,6 @@ public class WaterRendererTest {
     private static final String NORMAL_MAP = "textures/matchingNormalMap";
     private static final float WAVE_SPEED = 0.03f;
 
-    private static final float SIZE = 800;
     private static final int VERTEX_COUNT = 256;
 
     private RawModel quad;
@@ -65,6 +64,7 @@ public class WaterRendererTest {
 
         shader.loadMoveFactor(moveFactor);
         shader.loadLight(sun);
+        shader.loadSkyColor(MasterRenderer.FINAL_RED, MasterRenderer.FINAL_GREEN, MasterRenderer.FINAL_BLUE);
 
         GL30.glBindVertexArray(quad.getVaoID());
         GL20.glEnableVertexAttribArray(0);
@@ -106,8 +106,8 @@ public class WaterRendererTest {
         int vertexPointer = 0;
         for (int i = 0; i < VERTEX_COUNT; i++) {
             for (int j = 0; j < VERTEX_COUNT; j++) {
-                vertices[vertexPointer * 2] = (float) j / ((float) VERTEX_COUNT - 1) * SIZE;
-                vertices[vertexPointer * 2 + 1] = (float) i / ((float) VERTEX_COUNT - 1) * SIZE;
+                vertices[vertexPointer * 2] = (float) j / ((float) VERTEX_COUNT - 1) * WaterTile.SIZE;
+                vertices[vertexPointer * 2 + 1] = (float) i / ((float) VERTEX_COUNT - 1) * WaterTile.SIZE;
 
                 textureCoords[vertexPointer * 2] = (float) j / ((float) VERTEX_COUNT - 1);
                 textureCoords[vertexPointer * 2 + 1] = (float) i / ((float) VERTEX_COUNT - 1);

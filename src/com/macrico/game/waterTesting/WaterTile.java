@@ -2,7 +2,7 @@ package com.macrico.game.waterTesting;
 
 public class WaterTile {
 
-    private static final float SIZE = 800;
+    public static final float SIZE = 800;
 
     private float x;
     private float z;
