@@ -10,6 +10,8 @@ import com.macrico.game.objConverter.OBJFileLoader;
 import com.macrico.game.particles.ParticleMaster;
 import com.macrico.game.particles.ParticleSystem;
 import com.macrico.game.particles.ParticleTexture;
+import com.macrico.game.postProcessing.Fbo;
+import com.macrico.game.postProcessing.PostProcessing;
 import com.macrico.game.renderEngine.DisplayManager;
 import com.macrico.game.renderEngine.Loader;
 import com.macrico.game.renderEngine.MasterRenderer;
@@ -58,11 +60,12 @@ public class MainGameLoop {
     private MasterRenderer renderer;
     private GuiRenderer guiRenderer;
 
-    private GuiTexture waterVision;
-
     private com.macrico.game.waterTesting.WaterFrameBuffers frameBuffers;
     private com.macrico.game.waterTesting.WaterTile waterTile;
     private WaterRendererTest waterRendererTest;
+
+    private Fbo multisampleFbo;
+    private Fbo outputFbo;
 
     private void init() {
         DisplayManager.createDisplay();
@@ -98,12 +101,13 @@ public class MainGameLoop {
         setParticles();
         setEntities();
 
-        guiTextures.add(new GuiTexture(loader.loadTexture("textures/pixels/vignetteTest"), new Vector2f(0, 0), new Vector2f(1, 1)));
         for (int i = 0; i < 5; i++) {
             guiTextures.add(new GuiTexture(loader.loadTexture("textures/pixels/heart"), new Vector2f(-0.93f + (0.065f * i), 0.90f), new Vector2f(0.03f, 0.05f)));
         }
 
-        waterVision = new GuiTexture(loader.loadTexture("textures/pixels/waterVision"), new Vector2f(0, 0), new Vector2f(1, 1));
+        multisampleFbo = new Fbo(Display.getWidth(), Display.getHeight());
+        outputFbo = new Fbo(Display.getWidth(), Display.getHeight(), Fbo.DEPTH_TEXTURE);
+        PostProcessing.init(loader);
 
         runGameLoop();
         cleanUp();
@@ -226,15 +230,21 @@ public class MainGameLoop {
         camera.invertPitch();
 
         frameBuffers.bindRefractionFrameBuffer();
-        renderer.renderScene(entities, normalEntities, lamps, lights, terrains, camera, new Vector4f(0, -1, 0, waterTile.getHeight()));
+        renderer.renderScene(entities, normalEntities, lamps, lights, terrains, camera, new Vector4f(0, -1, 0, waterTile.getHeight() + 1));
 
         frameBuffers.unbindCurrentFrameBuffer();
         GL11.glDisable(GL30.GL_CLIP_DISTANCE0);
-        renderer.renderScene(entities, normalEntities, lamps, lights, terrains, camera, new Vector4f(0, -1, 0, 1000000));
-        waterRendererTest.render(waterTile, camera, lights.get(0));
 
-        if (camera.getPosition().y <= waterTile.getHeight()) guiRenderer.renderWater(waterVision);
-        if (player.getPosition().y + 1.8f <= waterTile.getHeight()) {
+        multisampleFbo.bindFrameBuffer();
+        renderer.renderScene(entities, normalEntities, lamps, lights, terrains, camera, new Vector4f(0, 0, 0, 0));
+        waterRendererTest.render(waterTile, camera, lights.get(0));
+        ParticleMaster.renderParticles(camera);
+        multisampleFbo.unbindFrameBuffer();
+        multisampleFbo.resolveToFbo(outputFbo);
+
+        PostProcessing.doPostProcessing(outputFbo.getColourTexture(), camera, waterTile.getHeight());
+
+        if (player.getPosition().y + 1.5f <= waterTile.getHeight()) {
             Player.underWater = true;
             Player.RUN_SPEED = 7.5f;
             Player.JUMP_POWER = 2.75f;
@@ -246,12 +256,14 @@ public class MainGameLoop {
             Player.GRAVITY = Player.REAL_GRAVITY;
         }
 
-        ParticleMaster.renderParticles(camera);
         guiRenderer.render(guiTextures);
         TextMaster.render();
     }
 
     private void cleanUp() {
+        PostProcessing.cleanUp();
+        outputFbo.cleanUp();
+        multisampleFbo.cleanUp();
         ParticleMaster.cleanUp();
         TextMaster.cleanUp();
         frameBuffers.cleanUp();

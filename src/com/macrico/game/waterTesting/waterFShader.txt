@@ -48,7 +48,7 @@ void main(void) {
     vec4 reflectColor = texture(reflectionTexture, reflectTexCoords);
     vec4 refractColor = texture(refractionTexture, refractTexCoords);
 
-    refractColor = mix(refractColor, vec4(0.0, 0.3, 1.0, 1.0), clamp(waterDepth/60.0, 0.0, 1.0));
+    refractColor = mix(refractColor, vec4(0.0, 0.3, 1.0, 1.0), clamp(waterDepth / 60.0, 0.0, 1.0));
 
     vec4 normalMapColor = texture(normalMap, distortedTexCoords);
     vec3 normal = vec3(normalMapColor.r * 2.0 - 1.0, normalMapColor.b * 3.0, normalMapColor.g * 2.0 - 1.0);
