@@ -19,10 +19,7 @@ import com.macrico.game.textures.TerrainTexture;
 import com.macrico.game.textures.TerrainTexturePack;
 import com.macrico.game.toolbox.Input;
 import com.macrico.game.toolbox.MousePicker;
-import com.macrico.game.water.WaterFrameBuffers;
-import com.macrico.game.water.WaterRenderer;
-import com.macrico.game.water.WaterShader;
-import com.macrico.game.water.WaterTile;
+import com.macrico.game.waterTesting.WaterRendererTest;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
@@ -48,7 +45,6 @@ public class MainGameLoop {
     private List<Lamp> lamps;
     private List<Light> lights;
     private List<GuiTexture> guiTextures;
-    private List<WaterTile> waters;
 
     private TerrainTexture blendMap;
     private TerrainTexturePack texturePack;
@@ -62,11 +58,11 @@ public class MainGameLoop {
     private MasterRenderer renderer;
     private GuiRenderer guiRenderer;
 
-    private WaterFrameBuffers waterFrameBuffers;
-    private WaterShader waterShader;
-    private WaterRenderer waterRenderer;
-
     private GuiTexture waterVision;
+
+    private com.macrico.game.waterTesting.WaterFrameBuffers frameBuffers;
+    private com.macrico.game.waterTesting.WaterTile waterTile;
+    private WaterRendererTest waterRendererTest;
 
     private void init() {
         DisplayManager.createDisplay();
@@ -81,7 +77,6 @@ public class MainGameLoop {
         lamps = new ArrayList<>();
         lights = new ArrayList<>();
         guiTextures = new ArrayList<>();
-        waters = new ArrayList<>();
 
         float x = random.nextFloat() * -800;
         float z = random.nextFloat() * -800;
@@ -98,6 +93,7 @@ public class MainGameLoop {
 
         sun = new Sun(new Vector3f(10000, 15000, -10000));
         lights.add(sun);
+
         setWaters();
         setParticles();
         setEntities();
@@ -144,19 +140,19 @@ public class MainGameLoop {
             float x = random.nextFloat() * -800;
             float z = random.nextFloat() * -800;
             float y = terrains.get(0).getHeightOfTerrain(x, z);
-            if (y > waters.get(0).getHeight())
+            if (y > waterTile.getHeight())
                 entities.add(new Entity(fernTexture, random.nextInt(4), new Vector3f(x, y, z), 0, random.nextFloat() * 360, 0, 0.5f));
 
             x = random.nextFloat() * -800;
             z = random.nextFloat() * -800;
             y = terrains.get(0).getHeightOfTerrain(x, z);
-            if (y > waters.get(0).getHeight())
+            if (y > waterTile.getHeight())
                 entities.add(new Entity(tree2Texture, new Vector3f(x, y, z), 0, random.nextFloat() * 360, 0, 0.5f));
 
             x = random.nextFloat() * -800;
             z = random.nextFloat() * -800;
             y = terrains.get(0).getHeightOfTerrain(x, z);
-            if (y > waters.get(0).getHeight())
+            if (y > waterTile.getHeight())
                 entities.add(new Entity(tree1Texture, new Vector3f(x, y, z), 0, random.nextFloat() * 360, 0, 1));
 
             x = random.nextFloat() * -800;
@@ -167,10 +163,9 @@ public class MainGameLoop {
     }
 
     private void setWaters() {
-        waterFrameBuffers = new WaterFrameBuffers();
-        waterShader = new WaterShader();
-        waterRenderer = new WaterRenderer(loader, waterShader, renderer.getProjectionMatrix(), waterFrameBuffers);
-        waters.add(new WaterTile(-400, -400, -3));
+        frameBuffers = new com.macrico.game.waterTesting.WaterFrameBuffers();
+        waterTile = new com.macrico.game.waterTesting.WaterTile(-1, -1, -3);
+        waterRendererTest = new WaterRendererTest(loader, renderer.getProjectionMatrix(), frameBuffers);
     }
 
     private void setParticles() {
@@ -222,25 +217,24 @@ public class MainGameLoop {
         renderer.renderShadowMap(entities, lights.get(0));
 
         GL11.glEnable(GL30.GL_CLIP_DISTANCE0);
-
-        waterFrameBuffers.bindReflectionFrameBuffer();
-        float distance = 2 * (camera.getPosition().y - waters.get(0).getHeight());
+        frameBuffers.bindReflectionFrameBuffer();
+        float distance = 2 * (camera.getPosition().y - waterTile.getHeight());
         camera.getPosition().y -= distance;
         camera.invertPitch();
-        renderer.renderScene(entities, normalEntities, lamps, lights, terrains, camera, new Vector4f(0, 1, 0, -waters.get(0).getHeight()));
+        renderer.renderScene(entities, normalEntities, lamps, lights, terrains, camera, new Vector4f(0, 1, 0, -waterTile.getHeight()));
         camera.getPosition().y += distance;
         camera.invertPitch();
 
-        waterFrameBuffers.bindRefractionFrameBuffer();
-        renderer.renderScene(entities, normalEntities, lamps, lights, terrains, camera, new Vector4f(0, -1, 0, waters.get(0).getHeight()));
+        frameBuffers.bindRefractionFrameBuffer();
+        renderer.renderScene(entities, normalEntities, lamps, lights, terrains, camera, new Vector4f(0, -1, 0, waterTile.getHeight()));
 
-        waterFrameBuffers.unbindCurrentFrameBuffer();
+        frameBuffers.unbindCurrentFrameBuffer();
         GL11.glDisable(GL30.GL_CLIP_DISTANCE0);
         renderer.renderScene(entities, normalEntities, lamps, lights, terrains, camera, new Vector4f(0, -1, 0, 1000000));
-        waterRenderer.render(waters, camera, lights.get(0));
+        waterRendererTest.render(waterTile, camera, lights.get(0));
 
-        if (camera.getPosition().y <= waters.get(0).getHeight()) guiRenderer.renderWater(waterVision);
-        if (player.getPosition().y + 1.8f <= waters.get(0).getHeight()) {
+        if (camera.getPosition().y <= waterTile.getHeight()) guiRenderer.renderWater(waterVision);
+        if (player.getPosition().y + 1.8f <= waterTile.getHeight()) {
             Player.underWater = true;
             Player.RUN_SPEED = 7.5f;
             Player.JUMP_POWER = 2.75f;
@@ -260,8 +254,8 @@ public class MainGameLoop {
     private void cleanUp() {
         ParticleMaster.cleanUp();
         TextMaster.cleanUp();
-        waterFrameBuffers.cleanUp();
-        waterShader.cleanUp();
+        frameBuffers.cleanUp();
+        waterRendererTest.cleanUp();
         guiRenderer.cleanUp();
         renderer.cleanUp();
         loader.cleanUp();

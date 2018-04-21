@@ -43,6 +43,16 @@ public class Loader {
         return vaoID;
     }
 
+    public RawModel loadToVAO(float[] positions, float[] textureCoords, int[] indices) {
+        int vaoID = createVAO();
+        bindIndicesBuffer(indices);
+        storeDataInAttributeList(0, 2, positions);
+        storeDataInAttributeList(1, 2, textureCoords);
+        unbindVAO();
+
+        return new RawModel(vaoID, indices.length);
+    }
+
     public RawModel loadToVAO(float[] positions, float[] textureCoords, float[] normals, float[] tangents, int[] indices) {
         int vaoID = createVAO();
         bindIndicesBuffer(indices);
